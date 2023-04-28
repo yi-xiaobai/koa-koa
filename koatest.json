@@ -9,7 +9,9 @@
       "out_file": "logs/sx_out.log",
       "log_date_format": "YYYY-MM-DD HH:mm Z",
       "env": {
-        "npm_config_env": "qa"
+        "npm_config_env": "qa",
+        "PORT": 7002,
+        "NODE_ENV": "development"
       }
     }
   ]
