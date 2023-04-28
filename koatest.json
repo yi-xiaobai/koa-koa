@@ -10,7 +10,7 @@
       "log_date_format": "YYYY-MM-DD HH:mm Z",
       "env": {
         "npm_config_env": "qa",
-        "PORT": 7002,
+        "PORT": 5000,
         "NODE_ENV": "development"
       }
     }
