@@ -1,12 +1,12 @@
 {
   "apps": [
     {
-      "name": "chxapp.sgmlink.com-chevyv2",
-      "script": "./app.js",
+      "name": "yyds",
+      "script": "bin/www",
       "watch": false,
       "instances": 1,
-      "error_file": "logs/xcx_error_v2.log",
-      "out_file": "logs/xcx_out_v2.log",
+      "error_file": "logs/error_v2.log",
+      "out_file": "logs/out_v2.log",
       "log_date_format": "YYYY-MM-DD HH:mm Z",
       "env": {
         "NODE_ENV": "production",
