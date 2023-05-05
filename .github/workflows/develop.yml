@@ -32,13 +32,16 @@ jobs:
 
       # 安装依赖
       - name: install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          npm install pm2 -g
 
       # 重启项目
       - name: restart project
         run: |
           whereis pm2
           echo "===="
+          echo $PATH
           pm2 reload 0
 
 # 连接服务器
