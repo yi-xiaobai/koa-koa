@@ -16,14 +16,13 @@ jobs:
 
       # 连接服务器
       - name: connect host
-        uses: appleboy/ssh-action@master # 使用ssh链接服务器
+        uses: appleboy/ssh-action@v0.1.10 # 使用ssh链接服务器
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
           script: |
-            echo  ${{ secrets }}
             cd /apps/koa-koa
             pwd
 
@@ -37,7 +36,11 @@ jobs:
 
       # 重启项目
       - name: restart project
-        run: pm2 reload 0
+        run: |
+          whereis pm2
+          echo $PATH
+          pm2 reload 0
+
 # 连接服务器
 # 进入项目路径
 # git拉取最新代码
