@@ -22,9 +22,10 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
           port: ${{ secrets.PORT }}
-        script: |
-          echo  ${{ secrets }}
-          cd /apps/koa-koa
+          script: |
+            echo  ${{ secrets }}
+            cd /apps/koa-koa
+            pwd
 
       # 拉取最新代码
       - name: pull code
