@@ -41,8 +41,8 @@ jobs:
         run: |
           whereis pm2
           echo "===="
-          echo $PATH
-          pm2 reload 0
+          pm2 ls
+          pm2 start koatest.json
 
 # 连接服务器
 # 进入项目路径
