@@ -26,12 +26,6 @@ jobs:
             pwd
             echo "==pull code=="
             git pull origin develop
-            echo "==install=="
-            npm ci
-            whereis pm2
-            echo "===="
-            pm2 ls
-            pm2 restart 0
 
       # 拉取最新代码
       # - name: pull code
@@ -53,6 +47,13 @@ jobs:
       #     echo "===="
       #     pm2 ls
       #     pm2 start koatest.json
+
+      #  echo "==install=="
+      #       npm ci
+      #       whereis pm2
+      #       echo "===="
+      #       pm2 ls
+      #       pm2 restart 0
 
 # 连接服务器
 # 进入项目路径
