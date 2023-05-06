@@ -18,7 +18,7 @@ jobs:
       # 读取package.json的值
       - name: Read Version
         id: version
-        use: ashley-taylor/read-json-property-action@v1.0
+        uses: ashley-taylor/read-json-property-action@v1.0
         with:
           path: ./package.json
           property: version
@@ -38,7 +38,7 @@ jobs:
       # 把assets.zip上传到仓库对应的发布版本Release上
       - name: Upload Release
         id: upload-release-asset
-        use: actions/upload-release-asset@master
+        uses: actions/upload-release-asset@master
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
