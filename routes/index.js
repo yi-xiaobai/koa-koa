@@ -7,7 +7,7 @@ router.get("/", async (ctx, next) => {
 });
 
 router.get("/string", async (ctx, next) => {
-  ctx.body = "koa2 string 22222";
+  ctx.body = "koa2 string 66666666";
 });
 
 router.get("/json", async (ctx, next) => {
