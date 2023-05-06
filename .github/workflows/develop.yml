@@ -18,7 +18,10 @@ jobs:
           pwd
           ls -la
           echo "==="
-          tar -zcvf my-artifact ./**
+
+      # 压缩项目
+      - name: Build project
+        run: zip --junk-paths my-artifact ./**
 
       # 读取package.json的值
       - name: Read Version
