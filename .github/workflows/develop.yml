@@ -21,7 +21,7 @@ jobs:
 
       # 压缩项目
       - name: Build project
-        run: zip --junk-paths my-artifact ./**
+        run: zip -vr my-artifact ./**
 
       # 读取package.json的值
       - name: Read Version
@@ -31,6 +31,7 @@ jobs:
           path: ./package.json
           property: version
 
+      # 发布 Release
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -42,6 +43,7 @@ jobs:
           draft: false
           prerelease: false
 
+      # 上传构建结果到 Release
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1
@@ -53,25 +55,40 @@ jobs:
           asset_name: my-artifact.zip
           asset_content_type: application/zip
 
-      # 部署服务器
-      - name: connect host
-        uses: appleboy/ssh-action@v0.1.10 # 使用ssh链接服务器
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
-          script: |
-            cd /apps/
+      # 把文件上传到服务器
+      - name: Upload to Deploy Server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          # SSH_PRIVATE_KEY为准备工作步骤三中生成密钥对里的私钥
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_TOKEN }}
+          # 指定当前目录中要上传的内容
+          SOURCE: "./**"
+          # 指定上传到部署机器的哪个目录下
+          TARGET: "/apps/koa-koa"
+          # 上传前指令，此处用于清空TARGET下的文件
+          ARGS: "-avzr --delete"
+          # REMOTE_HOST为机器的公网IP
+          REMOTE_HOST: ${{ secrets.HOST }}
+          # REMOTE_USER 为登录机器时用到账号名
+          REMOTE_USER: ${{secrets.USERNAME}}
+          SCRIPT_AFTER: |
             pwd
-            wget https://github.com/yi-xiaobai/koa-koa/releases/latest/download/my-artifact.zip -O my-artifact.zip
-            tar zxvf my-artifact.zip
+            whoami
             npm install --production
             pm2 reload koatest.json
 
-# 连接服务器
-# 进入项目路径
-# git拉取最新代码
-# 安装依赖
-# 重启项目
-# 测试是否成功
+      # 部署服务器
+      # - name: connect host
+      #   uses: appleboy/ssh-action@v0.1.10 # 使用ssh链接服务器
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USERNAME }}
+      #     password: ${{ secrets.PASSWORD }}
+      #     port: ${{ secrets.PORT }}
+      #     script: |
+      #       cd /apps/
+      #       pwd
+      #       wget https://github.com/yi-xiaobai/koa-koa/releases/latest/download/my-artifact.zip -O my-artifact.zip
+      #       tar -zxvf my-artifact.zip
+      #       npm install --production
+      #       pm2 reload koatest.json
