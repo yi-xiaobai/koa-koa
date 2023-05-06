@@ -1,12 +1,11 @@
-# 工作流名称
-name: github-action-demo
+name: github-action-demo # 工作流名称
 on:
   push:
     branches:
-      - develop
+      - develop # 生效分支
 jobs:
-  first-github-job:
-    runs-on: ubuntu-latest
+  first-github-job: # 任务名称 自定义
+    runs-on: ubuntu-latest # 运行环境
     steps:
       - uses: actions/checkout@v3 #复用的 action 会把仓库代码检出到 runner 中。
 
@@ -28,21 +27,24 @@ jobs:
 
       # 拉取最新代码
       - name: pull code
-        run: git pull origin develop
+        run: |
+          pwd
+          echo "===="
+          git pull origin develop
 
       # 安装依赖
-      - name: install dependencies
-        run: |
-          npm ci
-          npm install pm2 -g
+      # - name: install dependencies
+      #   run: |
+      #     npm ci
+      #     npm install pm2 -g
 
-      # 重启项目
-      - name: restart project
-        run: |
-          whereis pm2
-          echo "===="
-          pm2 ls
-          pm2 start koatest.json
+      # # 重启项目
+      # - name: restart project
+      #   run: |
+      #     whereis pm2
+      #     echo "===="
+      #     pm2 ls
+      #     pm2 start koatest.json
 
 # 连接服务器
 # 进入项目路径
