@@ -71,24 +71,17 @@ jobs:
           REMOTE_HOST: ${{ secrets.HOST }}
           # REMOTE_USER 为登录机器时用到账号名
           REMOTE_USER: ${{secrets.USERNAME}}
-          SCRIPT_AFTER: |
-            pwd
-            whoami
-            npm install --production
-            pm2 reload koatest.json
 
       # 部署服务器
-      # - name: connect host
-      #   uses: appleboy/ssh-action@v0.1.10 # 使用ssh链接服务器
-      #   with:
-      #     host: ${{ secrets.HOST }}
-      #     username: ${{ secrets.USERNAME }}
-      #     password: ${{ secrets.PASSWORD }}
-      #     port: ${{ secrets.PORT }}
-      #     script: |
-      #       cd /apps/
-      #       pwd
-      #       wget https://github.com/yi-xiaobai/koa-koa/releases/latest/download/my-artifact.zip -O my-artifact.zip
-      #       tar -zxvf my-artifact.zip
-      #       npm install --production
-      #       pm2 reload koatest.json
+      - name: connect host
+        uses: appleboy/ssh-action@v0.1.10 # 使用ssh链接服务器
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /apps/koa-koa
+            pwd
+            npm install --production
+            pm2 reload koatest.json
