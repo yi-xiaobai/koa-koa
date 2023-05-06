@@ -23,29 +23,51 @@ jobs:
           path: ./package.json
           property: version
 
-      # 创建Release
       - name: Create Release
-        uses: actions/create-release@master
         id: create_release
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }} # 之前GitHub添加的Token
-        with:
-          tag_name: v${{steps.version.outputs.value}}
-          release_name: v${{steps.version.outputs.value}}
-          draft: false # 是否是草稿
-          prerelease: false # 是否是预发布
-
-      # 把assets.zip上传到仓库对应的发布版本Release上
-      - name: Upload Release
-        id: upload-release-asset
-        uses: actions/upload-release-asset@master
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # 上传地址，通过创建Release获取到的
-          asset_path: ./release.tgz # 要上传文件
-          asset_name: release.tgz # 上传后的文件名
-          asset_content_type: application/x-tgz
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+          asset_path: ./my-artifact.zip
+          asset_name: my-artifact.zip
+          asset_content_type: application/zip
+
+      # 创建Release
+      # - name: Create Release
+      #   uses: actions/create-release@v1
+      #   id: create_release
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.TOKEN }} # 之前GitHub添加的Token
+      #   with:
+      #     tag_name: v${{steps.version.outputs.value}}
+      #     release_name: v${{steps.version.outputs.value}}
+      #     draft: false # 是否是草稿
+      #     prerelease: false # 是否是预发布
+
+      # # 把assets.zip上传到仓库对应的发布版本Release上
+      # - name: Upload Release
+      #   id: upload-release-asset
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }} # 上传地址，通过创建Release获取到的
+      #     asset_path: ./assets.zip # 要上传文件
+      #     asset_name: assets.tgz # 上传后的文件名
+      #     asset_content_type: application/x-tgz
 
       # 部署服务器
       - name: connect host
@@ -58,8 +80,8 @@ jobs:
           script: |
             cd /apps/
             pwd
-            wget https://github.com/yi-xiaobai/koa-koa/releases/latest/download/release.tgz -O release.tgz
-            tar zxvf release.tgz
+            wget https://github.com/yi-xiaobai/koa-koa/releases/latest/download/my-artifact.zip -O my-artifact.zip
+            tar zxvf my-artifact.zip
             npm install --production
             pm2 reload koatest.json
 
