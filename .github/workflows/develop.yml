@@ -14,6 +14,11 @@ jobs:
         uses: actions/setup-node@v3 # 设置nodejs版本号
         with:
           node-versions: "14.19.1"
+      - run: |
+          pwd
+          ls -la
+          echo "==="
+          tar -zcvf my-artifact ./**
 
       # 读取package.json的值
       - name: Read Version
@@ -44,30 +49,6 @@ jobs:
           asset_path: ./my-artifact.zip
           asset_name: my-artifact.zip
           asset_content_type: application/zip
-
-      # 创建Release
-      # - name: Create Release
-      #   uses: actions/create-release@v1
-      #   id: create_release
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.TOKEN }} # 之前GitHub添加的Token
-      #   with:
-      #     tag_name: v${{steps.version.outputs.value}}
-      #     release_name: v${{steps.version.outputs.value}}
-      #     draft: false # 是否是草稿
-      #     prerelease: false # 是否是预发布
-
-      # # 把assets.zip上传到仓库对应的发布版本Release上
-      # - name: Upload Release
-      #   id: upload-release-asset
-      #   uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }} # 上传地址，通过创建Release获取到的
-      #     asset_path: ./assets.zip # 要上传文件
-      #     asset_name: assets.tgz # 上传后的文件名
-      #     asset_content_type: application/x-tgz
 
       # 部署服务器
       - name: connect host
