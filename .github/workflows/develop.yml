@@ -24,13 +24,21 @@ jobs:
           script: |
             cd /apps/koa-koa
             pwd
+            echo "==pull code=="
+            git pull origin develop
+            echo "==install=="
+            npm ci
+            whereis pm2
+            echo "===="
+            pm2 ls
+            pm2 restart 0
 
       # 拉取最新代码
-      - name: pull code
-        run: |
-          pwd
-          echo "===="
-          git pull origin develop
+      # - name: pull code
+      #   run: |
+      #     pwd
+      #     echo "===="
+      #     git pull origin develop
 
       # 安装依赖
       # - name: install dependencies
