@@ -14,10 +14,6 @@ jobs:
         uses: actions/setup-node@v3 # 设置nodejs版本号
         with:
           node-versions: "14.19.1"
-      - run: |
-          pwd
-          ls -la
-          echo "==="
 
       # 压缩项目
       - name: Build project
@@ -83,6 +79,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd /apps/koa-koa
+            node -v
             pwd
             npm install --production
             pm2 reload koatest.json
