@@ -111,10 +111,11 @@ jobs:
             cd /apps/koa-koa
             echo "==="
             whoami
+            echo  ${{ secrets.USERNAME }}
             ls -la /usr/local/node
-            ln -s /usr/local/node/bin /usr/local/bin
+            export PATH=$PATH:/usr/local/node-v14.19.1-linux-x64/bin
             echo $PATH
-            node -v
+            sudo node -v
             pwd
-            npm install --production
-            pm2 reload koatest.json
+            sudo npm install --production
+            sudo pm2 reload koatest.json
