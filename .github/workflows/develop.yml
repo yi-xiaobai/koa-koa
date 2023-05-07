@@ -98,16 +98,9 @@ jobs:
           # 排除上传的文件 用,隔开
           EXCLUDE: my-artifact.zip
 
-      # 部署服务器
-      - name: connect host
-        uses: appleboy/ssh-action@v0.1.10 # 使用ssh链接服务器
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          # password: ${{ secrets.PASSWORD }}
-          key: ${{ secrets.DEPLOY_TOKEN }}
-          port: ${{ secrets.PORT }}
-          script: |
+          SCRIPT_AFTER: |
+            whoami
+            pwd
             cd /apps/koa-koa
             echo "==="
             export NVM_DIR=~/.nvm
@@ -115,6 +108,27 @@ jobs:
             echo $PATH
             node -v
             pwd
+            echo $RSYNC_STDOUT
             npm install --production
-            npm i -g pm2
             pm2 reload koatest.json
+
+      # 部署服务器
+      # - name: connect host
+      #   uses: appleboy/ssh-action@v0.1.10 # 使用ssh链接服务器
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USERNAME }}
+      #     # password: ${{ secrets.PASSWORD }}
+      #     key: ${{ secrets.DEPLOY_TOKEN }}
+      #     port: ${{ secrets.PORT }}
+      #     script: |
+      #       cd /apps/koa-koa
+      #       echo "==="
+      #       export NVM_DIR=~/.nvm
+      #       source ~/.nvm/nvm.sh
+      #       echo $PATH
+      #       node -v
+      #       pwd
+      #       npm install --production
+      #       npm i -g pm2
+      #       pm2 reload koatest.json
