@@ -116,4 +116,5 @@ jobs:
             node -v
             pwd
             npm install --production
+            npm i -g pm2
             pm2 reload koatest.json
