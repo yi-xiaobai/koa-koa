@@ -71,6 +71,7 @@ jobs:
           last_ssh: |
             cd /apps/koa-koa
             echo "==="
+            ln -s /usr/local/node/bin /usr/local/bin
             echo $PATH
             node -v
             whereis node
