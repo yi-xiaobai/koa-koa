@@ -51,35 +51,60 @@ jobs:
           asset_name: my-artifact.zip
           asset_content_type: application/zip
 
-      # 把文件上传到服务器
-      - name: Upload to Deploy Server
-        uses: easingthemes/ssh-deploy@main
-        env:
-          # SSH_PRIVATE_KEY为准备工作步骤三中生成密钥对里的私钥
-          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_TOKEN }}
-          # 指定当前目录中要上传的内容
-          SOURCE: "./**"
-          # 指定上传到部署机器的哪个目录下
-          TARGET: "/apps/koa-koa"
-          # 上传前指令，此处用于清空TARGET下的文件
-          ARGS: "-avzr --delete"
-          # REMOTE_HOST为机器的公网IP
-          REMOTE_HOST: ${{ secrets.HOST }}
-          # REMOTE_USER 为登录机器时用到账号名
-          REMOTE_USER: ${{secrets.USERNAME}}
-
-      # 部署服务器
-      - name: connect host
-        uses: appleboy/ssh-action@v0.1.10 # 使用ssh链接服务器
+      # 执行部署任务
+      - name: Deploy to Server
+        uses: cross-the-world/ssh-scp-ssh-pipelines@latest
         with:
           host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          # password: ${{ secrets.PASSWORD }}
-          key: ${{ secrets.DEPLOY_TOKEN }}
+          user: ${{secrets.USERNAME}}
           port: ${{ secrets.PORT }}
-          script: |
+          key: ${{ secrets.DEPLOY_TOKEN }}
+
+          # 由于网路情况，很容易超时，设置为60s
+          connect_timeout:
+            60s
+
+            # 将工作目录下的文件全部拷贝到部署服务器的工作目录
+          scp: |
+            ./** => /apps/koa-koa
+          # 完成拷贝后在部署服务器执行的命令：进入项目目录，安装生产依赖，并使用 pm2 管理
+          last_ssh: |
             cd /apps/koa-koa
-            node -v
-            pwd
             npm install --production
             pm2 reload koatest.json
+
+      # 把文件上传到服务器
+      # - name: Upload to Deploy Server
+      #   uses: easingthemes/ssh-deploy@main
+      #   env:
+      #     # SSH_PRIVATE_KEY为准备工作步骤三中生成密钥对里的私钥
+      #     SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_TOKEN }}
+      #     # 指定当前目录中要上传的内容
+      #     SOURCE: "./**"
+      #     # 指定上传到部署机器的哪个目录下
+      #     TARGET: "/apps/koa-koa"
+      #     # 上传前指令，此处用于清空TARGET下的文件
+      #     ARGS: "-avzr --delete"
+      #     # REMOTE_HOST为机器的公网IP
+      #     REMOTE_HOST: ${{ secrets.HOST }}
+      #     # REMOTE_USER 为登录机器时用到账号名
+      #     REMOTE_USER: ${{secrets.USERNAME}}
+
+      #     # 排除上传的文件 用,隔开
+      #     EXCLUDE: my-artifact.zip
+
+      # 部署服务器
+      # - name: connect host
+      #   uses: appleboy/ssh-action@v0.1.10 # 使用ssh链接服务器
+      #   with:
+      #     host: ${{ secrets.HOST }}
+      #     username: ${{ secrets.USERNAME }}
+      #     # password: ${{ secrets.PASSWORD }}
+      #     key: ${{ secrets.DEPLOY_TOKEN }}
+      #     port: ${{ secrets.PORT }}
+      #     script: |
+      #       cd /apps/koa-koa
+      #       node -v
+      #       pwd
+      #       npm install --production
+      #       pm2 reload koatest.json
