@@ -70,6 +70,10 @@ jobs:
           # 完成拷贝后在部署服务器执行的命令：进入项目目录，安装生产依赖，并使用 pm2 管理
           last_ssh: |
             cd /apps/koa-koa
+            echo "==="
+            echo $PATH
+            node -v
+            whereis node
             npm install --production
             pm2 reload koatest.json
 
