@@ -4,6 +4,8 @@ LABEL description="Automatically deploy nodejs"
 
 # 环境变量
 ENV MYPATH /apps/koa-koa
+# 设置时区为中国标准时间
+ENV TZ=Asia/Shanghai
 
 # 镜像工作目录 -
 WORKDIR $MYPATH
@@ -14,8 +16,9 @@ COPY . /apps/koa-koa
 # 执行命令 安装依赖
 RUN npm install --registry=https://registry.npm.taobao.org --production
 RUN ls -al -R
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # 暴露端口
 EXPOSE 5000
 
-CMD [ "pm2-runtime", "start", "koatest.json" ]
+CMD [ "pm2-runtime", "start", "koatest.json"]
