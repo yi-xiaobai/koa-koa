@@ -99,11 +99,11 @@ jobs:
           EXCLUDE: my-artifact.zip
 
           SCRIPT_AFTER: |
-            docker stop ddb9a897df08
-            docker rm ddb9a897df08
-            docker pull yydsyyll/auto-deploy-koa:0.01
+            docker stop my-koa
+            docker rm my-koa
+            docker pull yydsyyll/auto-deploy-koa:0.0.1
             docker images
-            docker run -d --name my-koa -p 5000:5000 -v /apps/koa-koa:/apps/koa-koa auto-deploy-koa:0.01
+            docker run -d --name my-koa -p 5000:5000 -v /apps/koa-koa:/apps/koa-koa auto-deploy-koa:0.0.1
 
       # 部署服务器
       # - name: connect host
